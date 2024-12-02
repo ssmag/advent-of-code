@@ -1,5 +1,4 @@
-import java.io.File
-import kotlin.math.PI
+import Util.getLinesList
 import kotlin.math.abs
 
 object Day1 {
@@ -29,11 +28,6 @@ object Day1 {
         println("sum: $sum")
     }
 
-    private fun getLinesList(fileName: String): MutableList<String> {
-        val result = mutableListOf<String>()
-        File(fileName).useLines { lines -> lines.forEach { result.add(it) } }
-        return result
-    }
 }
 
 
