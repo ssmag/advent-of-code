@@ -1,11 +1,41 @@
 import java.io.File
+import kotlin.math.PI
+import kotlin.math.abs
 
 object Day1 {
     @JvmStatic
     fun main(args: Array<String>) {
-        val lineList = mutableListOf<String>()
+        val lineList = getLinesList(FILENAME)
+        val list1Arr = mutableListOf<Int>()
+        val list2Arr = mutableListOf<Int>()
+        lineList.forEach { line ->
+            line
+                .split(DELIM)
+                .map {
+                    Integer.parseInt(it)
+                }
+                .also { intLine ->
+                    list1Arr.add(intLine[0])
+                    list2Arr.add(intLine[1])
+                }
+        }
 
-        File("src/main/res/day1.txt").useLines { lines -> lines.forEach { lineList.add(it) }}
-        lineList.forEach { println(">  $it") }
+        list1Arr.sort()
+        list2Arr.sort()
+
+        val distanceArr = list1Arr.zip(list2Arr) { i, j -> abs(i - j)}
+        val sum = distanceArr.fold(0) { acc, i -> acc + i }
+
+        println("sum: $sum")
+    }
+
+    private fun getLinesList(fileName: String): MutableList<String> {
+        val result = mutableListOf<String>()
+        File(fileName).useLines { lines -> lines.forEach { result.add(it) } }
+        return result
     }
 }
+
+
+const val FILENAME = "src/main/res/day1.txt"
+const val DELIM = "   "
