@@ -6,10 +6,10 @@ object Day3 {
     fun main(args: Array<String>) {
         val lineList = getLinesList(FILENAME)
         val fullLine = lineList.reduce { acc, s -> "$acc$s"}
-        getSumOfProductsWhenEnabled(fullLine)
+        print(getSumOfProductsWhenEnabled(fullLine))
     }
 
-    private fun getSumOfProductsWhenEnabled(s: String) {
+    private fun getSumOfProductsWhenEnabled(s: String): Int {
         val regex = Regex("mul\\([0-9]+,[0-9]+\\)|do\\(\\)|don\'t\\(\\)")
         val multiplications = regex.findAll(s).map { mult -> mult.value }
         var sum = 0
@@ -37,11 +37,10 @@ object Day3 {
                 .reduce { acc, i -> acc * i }
             sum += product
         }
-        println(sum)
-
+        return sum
     }
 
-    private fun getSumOfProductsOfMulOperations(s :String) {
+    private fun getSumOfProductsOfMulOperations(s :String): Int {
         val regex = Regex("mul\\([0-9]+,[0-9]+\\)")
         val multiplications = regex.findAll(s)
         var sum = 0
@@ -58,7 +57,7 @@ object Day3 {
                 .reduce { acc, i -> acc * i }
             sum += product
         }
-        println(sum)
+        return sum
     }
 
 }
