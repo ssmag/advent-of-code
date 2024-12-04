@@ -1,12 +1,17 @@
 import Util.getLinesList
 import kotlin.math.abs
+import kotlin.system.measureTimeMillis
 
 object Day3 {
     @JvmStatic
     fun main(args: Array<String>) {
         val lineList = getLinesList(FILENAME)
         val fullLine = lineList.reduce { acc, s -> "$acc$s"}
+        val time = measureTimeMillis {
+            getSumOfProductsWhenEnabled(fullLine)
+        }
         print(getSumOfProductsWhenEnabled(fullLine))
+        println("time: $time")
     }
 
     private fun getSumOfProductsWhenEnabled(s: String): Int {

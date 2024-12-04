@@ -1,5 +1,6 @@
 import Util.getLinesList
 import kotlin.math.abs
+import kotlin.system.measureTimeMillis
 
 object Day1 {
     @JvmStatic
@@ -19,8 +20,16 @@ object Day1 {
                 }
         }
 
+        val time1 = measureTimeMillis {
+            getSimilarityScore(list1Arr, list2Arr)
+        }
+        val time2 = measureTimeMillis {
+            getDistanceOfArrays(list1Arr, list2Arr)
+        }
+
+        println("time1: $time1\ntime2: $time2")
         print(getSimilarityScore(list1Arr, list2Arr))
-        getDistanceOfArrays(list1Arr.sorted(), list2Arr.sorted())
+        getDistanceOfArrays(list1Arr, list2Arr)
     }
 
     private fun getSimilarityScore(arr1: List<Int>, arr2: List<Int>): Int {
@@ -47,6 +56,8 @@ object Day1 {
     }
 
     private fun getDistanceOfArrays(arr1: List<Int>, arr2: List<Int>): Int {
+        val arr1sorted = arr1.sorted()
+        val arr2sorted = arr2.sorted()
         val distanceArr = arr1.zip(arr2) { i, j -> abs(i - j)}
         val sum = distanceArr.fold(0) { acc, i -> acc + i }
 
