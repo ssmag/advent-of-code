@@ -56,6 +56,6 @@ object Day1 {
 }
 
 
-const val FILENAME = "src/main/res/day1.txt"
-const val EXAMPLE_FILENAME = "src/main/res/example-day1.txt"
-const val DELIM = "   "
+private const val FILENAME = "src/main/res/day1.txt"
+private const val EXAMPLE_FILENAME = "src/main/res/example-day1.txt"
+private const val DELIM = "   "
