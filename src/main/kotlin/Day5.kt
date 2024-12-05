@@ -4,22 +4,29 @@ object Day5 {
     private var pageOrderMap = mutableMapOf<String, List<String>>()
     @JvmStatic
     fun main(args: Array<String>) {
-        val file = Util.getFileString(EXAMPLE_FILENAME).split(DELIM)
+        val file = Util.getFileString(FILENAME).split(DELIM)
         val pageOrder = file[0]
         val pages = file[1].split("\n").map { it.split(",") }
         val validPages = mutableListOf<List<String>>()
+        var sum = 0
 
         val time = measureTimeMillis {
             pageOrderMap = getPageOrder(pageOrder)
             validPages.addAll(getValidPageLists(pages))
-            getSumOfMidNumbers(validPages.map { page -> page.map { numS -> Integer.parseInt(numS)} })
+            sum = getSumOfMidNumbers(validPages.map { page -> page.map { numS -> Integer.parseInt(numS)} })
         }
+        println("sum: $sum")
         println("time: $time")
-        println(validPages)
-        println(pageOrderMap)
     }
 
-    private fun getSumOfMidNumbers(map: List<List<Int>>) {
+    private fun getSumOfMidNumbers(listOfPages: List<List<Int>>): Int {
+        var sum = 0
+        listOfPages.forEach { page ->
+            val midPoint = page[page.size / 2]
+            sum += midPoint
+        }
+
+        return sum
 
     }
 
@@ -50,8 +57,6 @@ object Day5 {
             val curList = map[pair[0]]
             map[pair[0]] = curList?.plus(pair[1]) ?: listOf(pair[1])
         }
-
-//        println("orderedList: $orderedList")
 
         return map
     }
