@@ -1,4 +1,3 @@
-import kotlin.math.max
 import kotlin.system.measureTimeMillis
 
 object Day5 {
@@ -7,34 +6,39 @@ object Day5 {
     fun main(args: Array<String>) {
         val file = Util.getFileString(EXAMPLE_FILENAME).split(DELIM)
         val pageOrder = file[0]
-        val pages = file[1]
+        val pages = file[1].split("\n").map { it.split(",") }
+        val validPages = mutableListOf<List<String>>()
+
         val time = measureTimeMillis {
             pageOrderMap = getPageOrder(pageOrder)
-            getValidPageLists(pages)
+            validPages.addAll(getValidPageLists(pages))
+            getSumOfMidNumbers(validPages.map { page -> page.map { numS -> Integer.parseInt(numS)} })
         }
-        println(time)
+        println("time: $time")
+        println(validPages)
         println(pageOrderMap)
     }
 
-    private fun getValidPageLists(pages: String): List<String> {
-        println(pages)
-        val listOfListOfNums = pages.split("\n").map { it.split(",").reversed() }
-        listOfListOfNums.forEachIndexed outerloop@ { i, listOfNums ->
-            var isValid = true
+    private fun getSumOfMidNumbers(map: List<List<Int>>) {
+
+    }
+
+    private fun getValidPageLists(pages: List<List<String>>): MutableList<List<String>> {
+        val resultList = mutableListOf<List<String>>()
+        pages.forEachIndexed outerloop@ { i, listOfNums ->
+            val listOfNumsReversed = listOfNums.reversed()
             pageOrderMap.forEach { (k, v) ->
-                val indexOfKey = listOfNums.indexOf(k)
+                val indexOfKey = listOfNumsReversed.indexOf(k)
                 if (indexOfKey == -1) return@forEach
-                val everythingBeforeNumKey = listOfNums.subList(indexOfKey + 1, listOfNums.size)
+                val everythingBeforeNumKey = listOfNumsReversed.subList(indexOfKey + 1, listOfNumsReversed.size)
                 if (v.any { it in everythingBeforeNumKey }) {
-                    isValid = false
                     return@outerloop
                 }
-
             }
-            println("${listOfNums.reversed()} isvalid: $isValid")
+
+            resultList.add(listOfNums)
         }
-        print(listOfListOfNums)
-        return emptyList()
+        return resultList
     }
 
     private fun getPageOrder(pageOrderString: String): MutableMap<String, List<String>> {
