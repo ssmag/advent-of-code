@@ -2,23 +2,43 @@ import kotlin.math.max
 import kotlin.system.measureTimeMillis
 
 object Day5 {
+    private var pageOrderMap = mutableMapOf<String, List<String>>()
     @JvmStatic
     fun main(args: Array<String>) {
         val file = Util.getFileString(EXAMPLE_FILENAME).split(DELIM)
         val pageOrder = file[0]
         val pages = file[1]
-        val pageOrderList: List<String>
         val time = measureTimeMillis {
-            pageOrderList = getPageOrder(pageOrder)
+            pageOrderMap = getPageOrder(pageOrder)
+            getValidPageLists(pages)
         }
         println(time)
-        println(pageOrderList)
-
+        println(pageOrderMap)
     }
 
-    private fun getPageOrder(pageOrderString: String): List<String> {
+    private fun getValidPageLists(pages: String): List<String> {
+        println(pages)
+        val listOfListOfNums = pages.split("\n").map { it.split(",").reversed() }
+        listOfListOfNums.forEachIndexed outerloop@ { i, listOfNums ->
+            var isValid = true
+            pageOrderMap.forEach { (k, v) ->
+                val indexOfKey = listOfNums.indexOf(k)
+                if (indexOfKey == -1) return@forEach
+                val everythingBeforeNumKey = listOfNums.subList(indexOfKey + 1, listOfNums.size)
+                if (v.any { it in everythingBeforeNumKey }) {
+                    isValid = false
+                    return@outerloop
+                }
+
+            }
+            println("${listOfNums.reversed()} isvalid: $isValid")
+        }
+        print(listOfListOfNums)
+        return emptyList()
+    }
+
+    private fun getPageOrder(pageOrderString: String): MutableMap<String, List<String>> {
         val listOfPairs = pageOrderString.split("\n")
-        val orderedList = mutableListOf<String>()
         val map = mutableMapOf<String, List<String>>()
 
         for (pairS in listOfPairs) {
@@ -27,20 +47,9 @@ object Day5 {
             map[pair[0]] = curList?.plus(pair[1]) ?: listOf(pair[1])
         }
 
-        for (entry in map) {
-            for (num in entry.value) {
-                if (orderedList.contains(num).not()) {
-                    orderedList.add(num)
-                }
-            }
-            orderedList.remove(entry.key)
-            val nextAdditionIndex = max(orderedList.indexOfFirst { entry.value.contains(it) },0)
-            orderedList.add(nextAdditionIndex, entry.key)
-        }
-//        println("map: $map")
 //        println("orderedList: $orderedList")
 
-        return orderedList
+        return map
     }
 
 
