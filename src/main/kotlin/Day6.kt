@@ -1,4 +1,4 @@
-import java.lang.Thread.sleep
+import kotlin.system.measureTimeMillis
 
 object Day6 {
 
@@ -6,12 +6,14 @@ object Day6 {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println(gameMap.contentDeepToString())
-        firstStar()
+        val time = measureTimeMillis {
+            firstStar()
+        }
+        println(time)
     }
 
     private fun initGameMap(): Array<CharArray> {
-        val file = Util.getFileString(EXAMPLE_FILENAME)
+        val file = Util.getFileString(FILENAME)
         return  file.split("\n").map { line -> line.toCharArray() }.toTypedArray()
     }
 
@@ -27,15 +29,20 @@ object Day6 {
     private fun firstStar() {
         val guard = Guard(getGuardCoords())
 
-        do {
-            println("guardCoords: ${guard.currentCoords}")
+        while (guard.isInside()) {
             guard.move()
-            printMap()
-            sleep(500)
-        } while (guard.isInside())
+        }
+        println(numOfXsOnMap())
 
+    }
 
+    private fun numOfXsOnMap(): Int {
+        var numOfX = 1
+        gameMap.forEach {  row ->
+            numOfX += row.count { it == 'X' }
+        }
 
+        return numOfX
     }
 
     private fun getGuardCoords(): Pair<Int, Int> {
@@ -74,7 +81,7 @@ object Day6 {
 
         fun moveForward() {
             try {
-                gameMap[currentCoords] = '.'
+                gameMap[currentCoords] = 'X'
                 currentCoords += facingDirection
                 gameMap[currentCoords] = facingRepresentation
             } catch (e: ArrayIndexOutOfBoundsException) {
