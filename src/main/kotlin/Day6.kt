@@ -7,17 +7,20 @@ object Day6 {
     @JvmStatic
     fun main(args: Array<String>) {
         val time = measureTimeMillis {
-            firstStar()
+            val guard = Guard()
+            firstStar(guard)
+            secondStar(guard)
         }
-        println(time)
+        println("time elapsed: $time")
     }
 
     private fun initGameMap(): Array<CharArray> {
-        val file = Util.getFileString(FILENAME)
+        val file = Util.getFileString(EXAMPLE_FILENAME)
         return  file.split("\n").map { line -> line.toCharArray() }.toTypedArray()
     }
 
     private fun printMap() {
+        println()
         gameMap.forEach { row ->
             row.forEach { char ->
                 print("$char ")
@@ -26,50 +29,48 @@ object Day6 {
         }
     }
 
-    private fun firstStar() {
-        val guard = Guard(getGuardCoords())
-
+    private fun firstStar(guard: Guard) {
         while (guard.isInside()) {
             guard.move()
         }
-        println(numOfXsOnMap())
+        gameMap[guard.currentCoords] = 'X'
 
     }
 
     private fun numOfXsOnMap(): Int {
         var numOfX = 1
         gameMap.forEach {  row ->
-            numOfX += row.count { it == 'X' }
+            numOfX += row.count { it == PASSED_SPOT }
         }
 
         return numOfX
     }
 
-    private fun getGuardCoords(): Pair<Int, Int> {
-        gameMap.forEachIndexed { i, row ->
-            row.forEachIndexed { j, c ->
-                if (c != '.' && c != '#') {
-                    return Pair(i,j)
+    private fun secondStar(guard: Guard) {
+        guard.reset()
+        printMap()
+        guard.move()
+        printMap()
+    }
+
+    private class Guard {
+        var currentCoords = getGuardCoords()
+        var facingDirection = getStartingFacingDirection()
+        val originalPosition = currentCoords
+        val originalFacingDirection = facingDirection
+
+
+        private fun getGuardCoords(): Pair<Int, Int> {
+            gameMap.forEachIndexed { i, row ->
+                row.forEachIndexed { j, c ->
+                    if (Direction.entries.map { it.repChar }.contains(c)) {
+                        return Pair(i,j)
+                    }
                 }
             }
+
+            return Pair(-1,-1)
         }
-
-        return Pair(-1,-1)
-    }
-
-    private fun secondStar(pageOrder: String, pages: List<List<String>>) {
-    }
-
-    private class Guard(var currentCoords: Pair<Int, Int>) {
-        val facingDirectionMap = mapOf(
-            Pair(Y_UP, STILL)   to '^',
-            Pair(STILL, X_UP)   to '>',
-            Pair(Y_DOWN, STILL) to 'v',
-            Pair(STILL, X_DOWN) to '<'
-        )
-        var facingDirection = getStartingFacingDirection()
-
-        var facingRepresentation = facingDirectionMap[facingDirection] ?: '*'
 
         fun move() {
             if (lookAhead() == '#') {
@@ -81,9 +82,9 @@ object Day6 {
 
         fun moveForward() {
             try {
-                gameMap[currentCoords] = 'X'
-                currentCoords += facingDirection
-                gameMap[currentCoords] = facingRepresentation
+                gameMap[currentCoords] = PASSED_SPOT
+                currentCoords += facingDirection.unitVector
+                gameMap[currentCoords] = facingDirection.repChar
             } catch (e: ArrayIndexOutOfBoundsException) {
                 println("out of bounds bitch")
             }
@@ -91,76 +92,63 @@ object Day6 {
 
         fun turnRight() {
             val newDirection = when (facingDirection) {
-                Pair(-1, 0) -> {
-                    Pair(0, 1)
-                }
-
-                Pair(0, 1) -> {
-                    Pair(1, 0)
-                }
-
-                Pair(1, 0) -> {
-                    Pair(0, -1)
-                }
-
-                Pair(0, -1) -> {
-                    Pair(-1, 0)
-                }
-
-                else -> {
-                    Pair(STILL, STILL)
-                }
+                Direction.RIGHT -> Direction.DOWN
+                Direction.DOWN -> Direction.LEFT
+                Direction.LEFT -> Direction.UP
+                Direction.UP -> Direction.RIGHT
+                Direction.NONE -> Direction.NONE
             }
 
             facingDirection = newDirection
-            updateFacingRepresentation()
+            gameMap[currentCoords] = facingDirection.repChar
         }
 
-        fun getStartingFacingDirection(): Pair<Int, Int> {
-            return when (gameMap[currentCoords]) {
-                '^' -> { Pair(Y_UP, STILL) }
-                '>' -> { Pair(STILL, X_UP) }
-                'v' -> { Pair(Y_DOWN, STILL) }
-                '<' -> { Pair(STILL, X_DOWN) }
-                else -> { Pair(STILL, STILL) }
-            }
+        fun reset() {
+            currentCoords = originalPosition
+            facingDirection = originalFacingDirection
+            gameMap[currentCoords] = facingDirection.repChar
         }
 
-        fun updateFacingRepresentation() {
-            facingRepresentation = facingDirectionMap[facingDirection] ?: '%'
-            gameMap[currentCoords] = facingRepresentation
+        fun getStartingFacingDirection(): Direction {
+            return Direction.entries.find { it.repChar == gameMap[currentCoords] } ?: Direction.NONE
         }
 
         fun lookAhead(): Char {
-            return gameMap[currentCoords + facingDirection]
+            return gameMap[currentCoords + facingDirection.unitVector]
         }
 
         fun isInside() =
             currentCoords.first < gameMap.first().size - 1 &&
-                    currentCoords.second <= gameMap.size - 1 &&
+                    currentCoords.second < gameMap.first().size - 1 &&
                     currentCoords.first >= 0 &&
                     currentCoords.second >= 0
-
-
 
         operator fun Pair<Int, Int>.plus(pair: Pair<Int, Int>): Pair<Int, Int> {
             return Pair(this.first + pair.first, this.second + pair.second)
         }
 
 
-        companion object {
-            private const val STILL = 0
-            private const val Y_UP = -1
-            private const val Y_DOWN = 1
-            private const val X_UP = 1
-            private const val X_DOWN = -1
-        }
     }
 
+    enum class Direction(val repChar: Char, val unitVector: Pair<Int, Int>) {
+        UP('^', Pair(Y_UP, STILL)),
+        DOWN('v', Pair(Y_DOWN, STILL)),
+        LEFT('<', Pair(STILL, X_DOWN)),
+        RIGHT('>', Pair(STILL, X_UP)),
+        NONE('*', Pair(STILL, STILL))
+    }
     private const val FILENAME = "src/main/res/day6.txt"
     private const val EXAMPLE_FILENAME = "src/main/res/example-day6.txt"
     private val DELIM = "\n\n"
+
+    const val STILL = 0
+    const val Y_UP = -1
+    const val Y_DOWN = 1
+    const val X_UP = 1
+    const val X_DOWN = -1
+    const val PASSED_SPOT = 'X'
 }
+
 
 private operator fun Array<CharArray>.set(cords: Pair<Int, Int>, value: Char) {
     this[cords.first][cords.second] = value
