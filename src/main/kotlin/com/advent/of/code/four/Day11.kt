@@ -1,3 +1,5 @@
+package com.advent.of.code.four
+
 import kotlin.math.ceil
 import kotlin.math.log10
 import kotlin.system.measureTimeMillis

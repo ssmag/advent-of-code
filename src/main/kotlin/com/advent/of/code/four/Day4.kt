@@ -1,3 +1,5 @@
+package com.advent.of.code.four
+
 import kotlin.system.measureTimeMillis
 
 object Day4 {

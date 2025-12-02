@@ -1,4 +1,5 @@
-import java.lang.Thread.sleep
+package com.advent.of.code.four
+
 import kotlin.system.measureTimeMillis
 
 object Day6 {

@@ -1,4 +1,4 @@
-package com.advent.of.code
+package com.advent.of.code.four
 
 import java.io.File
 import kotlin.system.measureTimeMillis

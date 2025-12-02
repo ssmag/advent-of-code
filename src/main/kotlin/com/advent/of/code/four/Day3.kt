@@ -1,5 +1,6 @@
+package com.advent.of.code.four
+
 import Util.getLinesList
-import kotlin.math.abs
 import kotlin.system.measureTimeMillis
 
 object Day3 {
