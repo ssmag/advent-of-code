@@ -181,8 +181,8 @@ object Day6 {
         val direction: Direction
     )
 
-    private const val FILENAME = "src/main/res/day6.txt"
-    private const val EXAMPLE_FILENAME = "src/main/res/example-day6.txt"
+    private const val FILENAME = "src/main/res/twenty-four/day6.txt"
+    private const val EXAMPLE_FILENAME = "src/main/res/twenty-four/example-day6.txt"
     private val DELIM = "\n\n"
 
     const val STILL = 0

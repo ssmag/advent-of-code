@@ -153,6 +153,6 @@ object Day4 {
 
     }
 
-    private const val FILENAME = "src/main/res/day4.txt"
-    private const val EXAMPLE_FILENAME = "src/main/res/example-day4.txt"
+    private const val FILENAME = "src/main/res/twenty-four/day4.txt"
+    private const val EXAMPLE_FILENAME = "src/main/res/twenty-four/example-day4.txt"
 }

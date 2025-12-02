@@ -1,8 +1,8 @@
-package com.advent.of.code.four
+package com.advent.of.code.five
 
 import kotlin.system.measureTimeMillis
 
-object Day25 {
+object Day1 {
 
 
     @JvmStatic

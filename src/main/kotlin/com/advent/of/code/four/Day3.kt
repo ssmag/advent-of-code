@@ -71,5 +71,5 @@ object Day3 {
 
 private const val DO = "do()"
 private const val DONT = "don't()"
-private const val FILENAME = "src/main/res/day3.txt"
+private const val FILENAME = "src/main/res/twenty-four/day3.txt"
 private const val DELIM = ","

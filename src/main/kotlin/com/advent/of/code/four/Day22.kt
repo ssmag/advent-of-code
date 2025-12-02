@@ -127,8 +127,8 @@ object Day22 {
         return this % 16777216
     }
 
-    private const val FILENAME = "src/main/res/day22.txt"
-    private const val EXAMPLE_FILENAME = "src/main/res/example-day22.txt"
+    private const val FILENAME = "src/main/res/twenty-four/day22.txt"
+    private const val EXAMPLE_FILENAME = "src/main/res/twenty-four/example-day22.txt"
     private val DELIM = "\n\n"
 
     fun getLinesList(fileName: String): MutableList<String> {

@@ -90,7 +90,7 @@ object Day5 {
     }
 
 
-    private const val FILENAME = "src/main/res/day5.txt"
-    private const val EXAMPLE_FILENAME = "src/main/res/example-day5.txt"
+    private const val FILENAME = "src/main/res/twenty-four/day5.txt"
+    private const val EXAMPLE_FILENAME = "src/main/res/twenty-four/example-day5.txt"
     private val DELIM = "\n\n"
 }
